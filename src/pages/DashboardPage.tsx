@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import { getCoachMessage } from '../utils/coach';
 import { ProgressRing } from '../components/ProgressRing';
 import { XPBar } from '../components/XPBar';
+import { AICoachPanel } from '../components/AICoachPanel';
 
 export const DashboardPage = ({ onFocus }: { onFocus: () => void }) => {
   const { tasks, habits, goals, user, focusSessions, logHabit } = useApp();
@@ -46,6 +47,8 @@ export const DashboardPage = ({ onFocus }: { onFocus: () => void }) => {
           <button className="btn-secondary w-full" onClick={() => habits[0] && logHabit(habits[0].id)}>Quick Log Habit</button>
         </section>
       </div>
+
+      <AICoachPanel user={user} tasks={tasks} habits={habits} goals={goals} />
     </div>
   );
 };
