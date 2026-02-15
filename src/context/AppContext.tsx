@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { format } from 'date-fns';
 import { defaultFocus, defaultGoals, defaultHabits, defaultTasks, defaultUser } from '../data/exampleData';
-import { getLocal, setLocal } from '../utils/storage';
 import { levelFromXp } from '../utils/xp';
 import { Achievement, FocusSession, Goal, Habit, Milestone, Priority, Task, User } from '../types';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface AppState {
   user: User;
@@ -35,7 +35,7 @@ const KEY = 'activeai-state-v1';
 const today = () => format(new Date(), 'yyyy-MM-dd');
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const persisted = getLocal(KEY, {
+  const [persisted, setPersisted] = useLocalStorage(KEY, {
     user: defaultUser,
     tasks: defaultTasks,
     habits: defaultHabits,
@@ -54,8 +54,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [aiMessage] = useState('');
 
   useEffect(() => {
-    setLocal(KEY, { user, tasks, habits, goals, focusSessions });
-  }, [user, tasks, habits, goals, focusSessions]);
+    setPersisted({ user, tasks, habits, goals, focusSessions });
+  }, [user, tasks, habits, goals, focusSessions, setPersisted]);
 
   const grantXp = (amount: number, reason?: Achievement) => {
     setXpGain(amount);
